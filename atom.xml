@@ -4,7 +4,7 @@
   <subtitle><![CDATA[Anker Lee's Blog]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://ankerlee.github.io/"/>
-  <updated>2015-03-24T07:22:45.000Z</updated>
+  <updated>2015-05-20T14:51:30.000Z</updated>
   <id>http://ankerlee.github.io/</id>
   
   <author>
@@ -15,28 +15,45 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title><![CDATA[Hello World]]></title>
-    <link href="http://ankerlee.github.io/2015/03/24/hello-world/"/>
-    <id>http://ankerlee.github.io/2015/03/24/hello-world/</id>
-    <published>2015-03-24T07:22:45.000Z</published>
-    <updated>2015-03-24T07:22:45.000Z</updated>
-    <content type="html"><![CDATA[<p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick_Start">Quick Start</h2><h3 id="Create_a_new_post">Create a new post</h3><p>``` bash<br>$ hexo new “My New Post”<br>```</p>
-<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<a id="more"></a>
-<h3 id="Run_server">Run server</h3><p>``` bash<br>$ hexo server<br>```</p>
-<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate_static_files">Generate static files</h3><p>``` bash<br>$ hexo generate<br>```</p>
-<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy_to_remote_sites">Deploy to remote sites</h3><p>``` bash<br>$ hexo deploy<br>```</p>
-<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+    <title><![CDATA[CentOS 6.5 最小化安装 网络配置]]></title>
+    <link href="http://ankerlee.github.io/2015/05/20/CentOS-6-5-%E6%9C%80%E5%B0%8F%E5%8C%96%E5%AE%89%E8%A3%85-%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/"/>
+    <id>http://ankerlee.github.io/2015/05/20/CentOS-6-5-最小化安装-网络配置/</id>
+    <published>2015-05-20T14:51:30.000Z</published>
+    <updated>2015-05-20T14:51:30.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="相关环境">相关环境</h2><ol>
+<li>我用的是Mac book pro,系统是Mac OS X Yosemite</li>
+<li><a href="">VMware Fusion</a>（请自行安装，这里不叙述VMware Fusion的安装过程）</li>
+<li><a href="">CentOS-6.5-x86_64-minimal.iso</a>（请自行通过VMware Fusion安装，这里不叙述CentOS最小化的安装过程）</li>
+</ol>
+<h2 id="CentOS网络配置图文详解">CentOS网络配置图文详解</h2><h3 id="尝试连接网络">尝试连接网络</h3><p>例如连接内网网关，我的内网网关是192.168.16.1，<code>ping 192.168.16.1</code>,提示错误：Network is unreachable,见下图所示：<br><img src="http://7xj72a.com1.z0.glb.clouddn.com/centos_net_1.png" alt=""><br><a id="more"></a></p>
+<h3 id="查看默认网络配置情况">查看默认网络配置情况</h3><p>以上问题说明，最小化安装后，网络不可用，OK，现在，我们开始配置网络,首先查看网络配置情况（以下图示情况可能因为CentOS安装过程中是否有做网络配置而不同，我在安装过程中有做过配置，当然即使做过配置，也是不可用的，因为最小化安装后，默认不会在系统启动的后自动启动网络配置），输入命令<code>cd /etc/sysconfig/network-scripts/</code>，然后输入<code>cat ifcfg-eth0</code>查看网络配置情况：<br><img src="http://7xj72a.com1.z0.glb.clouddn.com/centos_net_2.png" alt=""><br>可以看到，我这里已经有一些默认配置了，其实是我在CentOS最小化安装过程中有做配置，这里放上我在安装过程中配置网络参数的截图(没有在CentOS安装过程中配置网络参数的，可以直接编辑ifcfg-eth0文件，根据自己的实际情况设置网络参数)：<br><img src="http://7xj72a.com1.z0.glb.clouddn.com/centos_net_3.png" alt=""><br><img src="http://7xj72a.com1.z0.glb.clouddn.com/centos_net_4.png" alt=""></p>
+<h3 id="修改网络配置">修改网络配置</h3><p>OK,这里的关键点就是ONBOOT这个参数了，表示是否在系统启动的时候自动启用网络配置，可以看到默认是no，我们要将它改为yes，输入命令：<code>vi ifcfg-eth0</code>，进入到vi编辑界面，并且修改ONBOOT值为yes（这里忽略vi编辑器的基本操作方法讲解，请自行查阅vi操作的相关资料）：<br><img src="http://7xj72a.com1.z0.glb.clouddn.com/cenos_net_5.png" alt=""></p>
+<h3 id="重启网路配置">重启网路配置</h3><p>退出vi编辑后，重启网络配置，输入命令：<code>/etc/init.d/network restart</code>或者<code>service network restart</code><br><img src="http://7xj72a.com1.z0.glb.clouddn.com/centos_net_6.png" alt=""></p>
+<h3 id="重试内网连接">重试内网连接</h3><p>OK，现在，可以再次试试ping一下内网ip，例如：<code>ping 192.168.16.1</code><br><img src="http://7xj72a.com1.z0.glb.clouddn.com/centos_net_7.png" alt=""><br>现在可以看到，已经能够成功ping通内网了，说明网络已经成功连接了哦！当然，也可以ping通外网，不过你需要通过ip来ping，而不能通过域名地址，比如<code>ping www.baidu.com</code>这是ping不通的，因为还没有配置域名服务器哦，OK，接下来，我会继续讲解如何设置域名服务器地址</p>
+<h3 id="SSH远程连接">SSH远程连接</h3><p>接下来，为了方便从网络上copy东东（比如网址）直接黏贴到CentOS的文本交互界面，我们接下来采用SSH的方式（我们不是已经配置好网络了么，所以我们现在可以通过SSH远程控制来操作CentOS了哦），通过我的物理主机（也就是我的Mac笔记本）来操作我的装载虚拟机里面的CentOS，OK，马上SSH登陆上我的CentOS，输入命令<code>ssh root@192.168.16.112</code>输入密码后，成功登陆！接下来，就让我们通过SSH来继续配置CentOS吧！！！下图为SSH登陆截图：<br><img src="http://7xj72a.com1.z0.glb.clouddn.com/centos_net_8.png" alt=""></p>
+<h3 id="修改域名服务器配置">修改域名服务器配置</h3><p>Now，输入命令：<code>vi /etc/resolv.conf</code>,请按照下图编辑（当然你也可以输入其它正确的域名地址）：<br><img src="http://7xj72a.com1.z0.glb.clouddn.com/centos_net_9.png" alt=""></p>
+<h3 id="重试外网连接">重试外网连接</h3><p>OK,保存并退出vi编辑后，再次重启网络配置，输入命令：<code>/etc/init.d/network restart</code>或者<code>service network restart</code>，然后再次实施<code>ping www.baidu.com</code>,魔法是不是产生了？可以成功ping通百度了，OK，至此，你可以自由翱翔于网络世界了，例如可以通过wget来下载东西了！！！<br><img src="http://7xj72a.com1.z0.glb.clouddn.com/centos_net_10.png" alt=""></p>
+<blockquote>
+<p><code>OK，最后，感谢各位耐心看完此文，希望此文对您有所帮助，转载请注明出处http://ankerlee.github.io/2015/05/20/CentOS-6-5-最小化安装-网络配置/#more</code></p>
+</blockquote>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>Welcome to <a href="http://hexo.io/">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick_Start">Quick Start</h2><h3 id="Create_a_new_post">Create a new post</h3><p>``` bash<br>$ hexo new “My New Post”<br>```</p>
-<p>More info: <a href="http://hexo.io/docs/writing.html">Writing</a></p>]]>
+    <![CDATA[<h2 id="相关环境">相关环境</h2><ol>
+<li>我用的是Mac book pro,系统是Mac OS X Yosemite</li>
+<li><a href="">VMware Fusion</a>（请自行安装，这里不叙述VMware Fusion的安装过程）</li>
+<li><a href="">CentOS-6.5-x86_64-minimal.iso</a>（请自行通过VMware Fusion安装，这里不叙述CentOS最小化的安装过程）</li>
+</ol>
+<h2 id="CentOS网络配置图文详解">CentOS网络配置图文详解</h2><h3 id="尝试连接网络">尝试连接网络</h3><p>例如连接内网网关，我的内网网关是192.168.16.1，<code>ping 192.168.16.1</code>,提示错误：Network is unreachable,见下图所示：<br><img src="http://7xj72a.com1.z0.glb.clouddn.com/centos_net_1.png" alt=""><br>]]>
     
     </summary>
+    
+      <category term="centos" scheme="http://ankerlee.github.io/tags/centos/"/>
+    
+      <category term="centos 6.5" scheme="http://ankerlee.github.io/tags/centos-6-5/"/>
+    
+      <category term="最小化安装" scheme="http://ankerlee.github.io/tags/%E6%9C%80%E5%B0%8F%E5%8C%96%E5%AE%89%E8%A3%85/"/>
+    
+      <category term="网络配置" scheme="http://ankerlee.github.io/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/"/>
     
   </entry>
   
