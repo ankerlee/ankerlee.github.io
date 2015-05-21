@@ -4,7 +4,7 @@
   <subtitle><![CDATA[Anker Lee's Blog]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://ankerlee.github.io/"/>
-  <updated>2015-05-21T03:08:11.000Z</updated>
+  <updated>2015-05-21T06:30:53.000Z</updated>
   <id>http://ankerlee.github.io/</id>
   
   <author>
@@ -15,11 +15,89 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[Linux 时钟同步]]></title>
+    <link href="http://ankerlee.github.io/2015/05/21/Linux-%E6%97%B6%E9%92%9F%E5%90%8C%E6%AD%A5/"/>
+    <id>http://ankerlee.github.io/2015/05/21/Linux-时钟同步/</id>
+    <published>2015-05-21T06:30:53.000Z</published>
+    <updated>2015-05-21T06:30:53.000Z</updated>
+    <content type="html"><![CDATA[<blockquote>
+<p>文章欢迎转载，但转载时请保留本段文字，并置于文章的顶部<br>作者：Anker Lee<br>本文原文地址：<a href="http://ankerlee.github.io/2015/05/21/Linux-时钟同步" target="_blank" rel="external">http://ankerlee.github.io/2015/05/21/Linux-时钟同步</a></p>
+</blockquote>
+<hr>
+<h2 id="时间同步配置">时间同步配置</h2><h3 id="配置时间服务器">配置时间服务器</h3><pre><code>[root<span class="property">@localhost</span> etc]<span class="comment"># date</span>
+<span class="number">2015</span>年 <span class="number">05</span>月 <span class="number">21</span>日 星期四 <span class="number">22</span>:<span class="number">04</span>:<span class="number">18</span> CST <span class="comment">#错误的时间</span>
+[root<span class="property">@localhost</span> etc]<span class="comment"># ntpdate</span>
+-<span class="attribute">bash</span>: <span class="attribute">ntpdate</span>: command <span class="keyword">not</span> found
+</code></pre><a id="more"></a>
+<pre><code>[root@localhost etc]<span class="comment"># yum install ntpdate</span>
+<span class="keyword">...</span>这里省略安装过程中的输出文本
+Complete!
+[root@localhost etc]<span class="comment"># ntpdate time.nist.gov</span>
+<span class="number">21</span> May <span class="number">14</span>:<span class="number">06</span>:<span class="number">11</span> ntpdate[<span class="number">1316</span>]: step time server <span class="number">128.138</span><span class="number">.141</span><span class="number">.172</span> offset -<span class="number">28801.756893</span> sec
+[root@localhost etc]<span class="comment"># date</span>
+<span class="number">2015</span>年 <span class="number">05</span>月 <span class="number">21</span>日 星期四 <span class="number">14</span>:<span class="number">06</span>:<span class="number">18</span> CST <span class="comment">#正确的时间</span>
+</code></pre><p>推荐几个权威的时间同步服务器：</p>
+<blockquote>
+<p>time.nist.gov<br>time.nuri.net<br>asia.pool.ntp.org<br>asia.pool.ntp.org<br>asia.pool.ntp.org<br>asia.pool.ntp.org</p>
+</blockquote>
+<h3 id="自动时间同步设置">自动时间同步设置</h3><pre><code>[root@localhost etc]<span class="comment"># service crond status</span>
+crond (pid  <span class="number">1129</span>) 正在运行<span class="keyword">...</span>
+[root@localhost etc]<span class="comment"># vim /etc/crontab</span>
+<span class="comment">#编辑crontab文件，在最后面追加*/10 * * * * ntpdate time.nist.gov，表示没10分钟同步一次时间</span>
+[root@localhost etc]<span class="comment"># cat /etc/crontab</span>
+SHELL=/bin/bash
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=root
+HOME=/
+
+For details see man <span class="number">4</span> crontabs
+
+Example of job definition:
+.---------------- minute (<span class="number">0</span> - <span class="number">59</span>)
+|  .------------- hour (<span class="number">0</span> - <span class="number">23</span>)
+|  |  .---------- day of month (<span class="number">1</span> - <span class="number">31</span>)
+|  |  |  .------- month (<span class="number">1</span> - <span class="number">12</span>) OR jan,feb,mar,apr <span class="keyword">...</span>
+|  |  |  |  .---- day of week (<span class="number">0</span> - <span class="number">6</span>) (Sunday=<span class="number">0</span> or <span class="number">7</span>) OR sun,mon,tue,wed,thu,fri,sat
+|  |  |  |  |
+*  *  *  *  * user-name command to be executed
+
+*/<span class="number">10</span> * * * * ntpdate time.nist.gov
+[root@localhost etc]<span class="comment">#</span>
+</code></pre><p>crontab文件格式和含义：<br><img src="http://7xj72a.com1.z0.glb.clouddn.com/linux_time_1.png" alt=""></p>
+<blockquote>
+<p>minute： 表示分钟，可以是从0到59之间的任何整数。<br>hour：表示小时，可以是从0到23之间的任何整数。<br>day：表示日期，可以是从1到31之间的任何整数。<br>month：表示月份，可以是从1到12之间的任何整数。<br>week：表示星期几，可以是从0到7之间的任何整数，这里的0或7代表星期日。<br>command：要执行的命令，可以是系统命令，也可以是自己编写的脚本文件。</p>
+<p>在以上各个字段中，还可以使用以下特殊字符：<br>星号（<em>）：代表所有可能的值，例如month字段如果是星号，则表示在满足其它字段的制约条件后每月都执行该命令操作。<br>逗号（,）：可以用逗号隔开的值指定一个列表范围，例如，“1,2,5,7,8,9”<br>中杠（-）：可以用整数之间的中杠表示一个整数范围，例如“2-6”表示“2,3,4,5,6”<br>正斜线（/）：可以用正斜线指定时间的间隔频率，例如“0-23/2”表示每两小时执行一次。同时正斜线可以和星号一起使用，例如</em>/10，如果用在minute字段，表示每十分钟执行一次。</p>
+</blockquote>
+]]></content>
+    <summary type="html">
+    <![CDATA[<blockquote>
+<p>文章欢迎转载，但转载时请保留本段文字，并置于文章的顶部<br>作者：Anker Lee<br>本文原文地址：<a href="http://ankerlee.github.io/2015/05/21/Linux-时钟同步">http://ankerlee.github.io/2015/05/21/Linux-时钟同步</a></p>
+</blockquote>
+<hr>
+<h2 id="时间同步配置">时间同步配置</h2><h3 id="配置时间服务器">配置时间服务器</h3><pre><code>[root<span class="property">@localhost</span> etc]<span class="comment"># date</span>
+<span class="number">2015</span>年 <span class="number">05</span>月 <span class="number">21</span>日 星期四 <span class="number">22</span>:<span class="number">04</span>:<span class="number">18</span> CST <span class="comment">#错误的时间</span>
+[root<span class="property">@localhost</span> etc]<span class="comment"># ntpdate</span>
+-<span class="attribute">bash</span>: <span class="attribute">ntpdate</span>: command <span class="keyword">not</span> found
+</code></pre>]]>
+    
+    </summary>
+    
+      <category term="centos" scheme="http://ankerlee.github.io/tags/centos/"/>
+    
+      <category term="linux" scheme="http://ankerlee.github.io/tags/linux/"/>
+    
+      <category term="时钟同步" scheme="http://ankerlee.github.io/tags/%E6%97%B6%E9%92%9F%E5%90%8C%E6%AD%A5/"/>
+    
+      <category term="最小化安装" scheme="http://ankerlee.github.io/tags/%E6%9C%80%E5%B0%8F%E5%8C%96%E5%AE%89%E8%A3%85/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[CentOS 6.5 最小化安装 网络配置]]></title>
     <link href="http://ankerlee.github.io/2015/05/21/CentOS-6-5-%E6%9C%80%E5%B0%8F%E5%8C%96%E5%AE%89%E8%A3%85-%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/"/>
     <id>http://ankerlee.github.io/2015/05/21/CentOS-6-5-最小化安装-网络配置/</id>
-    <published>2015-05-21T03:08:11.000Z</published>
-    <updated>2015-05-21T03:08:11.000Z</updated>
+    <published>2015-05-21T06:13:04.000Z</published>
+    <updated>2015-05-21T06:13:04.000Z</updated>
     <content type="html"><![CDATA[<blockquote>
 <p>文章欢迎转载，但转载时请保留本段文字，并置于文章的顶部<br>作者：Anker Lee<br>本文原文地址：<a href="http://ankerlee.github.io/2015/05/20/CentOS-6-5-最小化安装-网络配置" target="_blank" rel="external">http://ankerlee.github.io/2015/05/20/CentOS-6-5-最小化安装-网络配置</a></p>
 </blockquote>
@@ -54,7 +132,53 @@
     
       <category term="centos" scheme="http://ankerlee.github.io/tags/centos/"/>
     
-      <category term="centos 6.5" scheme="http://ankerlee.github.io/tags/centos-6-5/"/>
+      <category term="linux" scheme="http://ankerlee.github.io/tags/linux/"/>
+    
+      <category term="最小化安装" scheme="http://ankerlee.github.io/tags/%E6%9C%80%E5%B0%8F%E5%8C%96%E5%AE%89%E8%A3%85/"/>
+    
+      <category term="网络配置" scheme="http://ankerlee.github.io/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[CentOS 最小化安装 VIM安装和配置]]></title>
+    <link href="http://ankerlee.github.io/2015/05/21/CentOS-6-5-%E6%9C%80%E5%B0%8F%E5%8C%96%E5%AE%89%E8%A3%85-VIM%E5%AE%89%E8%A3%85/"/>
+    <id>http://ankerlee.github.io/2015/05/21/CentOS-6-5-最小化安装-VIM安装/</id>
+    <published>2015-05-21T06:12:57.000Z</published>
+    <updated>2015-05-21T06:12:57.000Z</updated>
+    <content type="html"><![CDATA[<blockquote>
+<p>文章欢迎转载，但转载时请保留本段文字，并置于文章的顶部<br>作者：Anker Lee<br>本文原文地址：<a href="http://ankerlee.github.io/2015/05/21/CentOS-6-5-最小化安装-VIM安装" target="_blank" rel="external">http://ankerlee.github.io/2015/05/21/CentOS-6-5-最小化安装-VIM安装</a></p>
+</blockquote>
+<hr>
+<h2 id="VIM安装">VIM安装</h2><p>CentOS最小化安装默认自带vi，功能没有vim丰富，安装vim取代vi：<br>输入命令：<code>yum vim-enhanced</code>，安装过程中，多次提示Is this ok y/N:，输入y回车即可，最后提示Complete!表示安装成功！</p>
+<h2 id="VIM配置">VIM配置</h2><h3 id="查看VIM版本信息">查看VIM版本信息</h3><p>输入命令<code>vim --version</code>,查看vim版本信息：<br><a id="more"></a></p>
+<pre><code><span class="list">[<span class="keyword">root@localhost</span> ~]# vim
+<span class="list">[<span class="keyword">root@localhost</span> ~]# vim --version
+VIM - Vi IMproved <span class="number">7.2</span> <span class="list">(<span class="keyword">2008</span> Aug <span class="number">9</span>, compiled Apr  <span class="number">5</span> <span class="number">2012</span> <span class="number">10</span>:17:30)</span>
+包含补丁: <span class="number">1</span><span class="number">-411</span>
+修改者 &lt;bugzilla@redhat.com&gt;
+编译者 &lt;bugzilla@redhat.com&gt;
+巨型版本 无图形界面。  可使用<span class="list">(<span class="keyword"><span class="built_in">+</span></span>)</span>与不可使用<span class="list">(<span class="keyword"><span class="built_in">-</span></span>)</span>的功能:
+*这里省略了很多输出信息*
+ 系统 vimrc 文件: <span class="string">"/etc/vimrc"</span>
+ 用户 vimrc 文件: <span class="string">"$HOME/.vimrc"</span>
+ 用户 exrc 文件: <span class="string">"$HOME/.exrc"</span>
+ $VIM 预设值: <span class="string">"/usr/share/vim"</span>
+*这里省略了很多输出信息*</span></span>
+</code></pre>]]></content>
+    <summary type="html">
+    <![CDATA[<blockquote>
+<p>文章欢迎转载，但转载时请保留本段文字，并置于文章的顶部<br>作者：Anker Lee<br>本文原文地址：<a href="http://ankerlee.github.io/2015/05/21/CentOS-6-5-最小化安装-VIM安装">http://ankerlee.github.io/2015/05/21/CentOS-6-5-最小化安装-VIM安装</a></p>
+</blockquote>
+<hr>
+<h2 id="VIM安装">VIM安装</h2><p>CentOS最小化安装默认自带vi，功能没有vim丰富，安装vim取代vi：<br>输入命令：<code>yum vim-enhanced</code>，安装过程中，多次提示Is this ok y/N:，输入y回车即可，最后提示Complete!表示安装成功！</p>
+<h2 id="VIM配置">VIM配置</h2><h3 id="查看VIM版本信息">查看VIM版本信息</h3><p>输入命令<code>vim --version</code>,查看vim版本信息：<br>]]>
+    
+    </summary>
+    
+      <category term="centos" scheme="http://ankerlee.github.io/tags/centos/"/>
+    
+      <category term="linux" scheme="http://ankerlee.github.io/tags/linux/"/>
     
       <category term="最小化安装" scheme="http://ankerlee.github.io/tags/%E6%9C%80%E5%B0%8F%E5%8C%96%E5%AE%89%E8%A3%85/"/>
     

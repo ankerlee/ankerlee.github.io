@@ -37,7 +37,7 @@
   </script>
 
 
-  <title> CentOS 6.5 最小化安装 网络配置 // Anker Lee </title>
+  <title> Linux 时钟同步 // Anker Lee </title>
 </head>
 
 <body>
@@ -108,7 +108,7 @@
           
           
             
-              CentOS 6.5 最小化安装 网络配置
+              Linux 时钟同步
             
           
         </h1>
@@ -124,8 +124,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/05/21/CentOS-6-5-最小化安装-网络配置/#comments" >
-              <span class="post-comments-count ds-thread-count" data-thread-key="2015/05/21/CentOS-6-5-最小化安装-网络配置/"></span>
+            <a href="/2015/05/21/Linux-时钟同步/#comments" >
+              <span class="post-comments-count ds-thread-count" data-thread-key="2015/05/21/Linux-时钟同步/"></span>
             </a>
           </span>
           
@@ -141,22 +141,53 @@
 
         
           <blockquote>
-<p>文章欢迎转载，但转载时请保留本段文字，并置于文章的顶部<br>作者：Anker Lee<br>本文原文地址：<a href="http://ankerlee.github.io/2015/05/20/CentOS-6-5-最小化安装-网络配置" target="_blank" rel="external">http://ankerlee.github.io/2015/05/20/CentOS-6-5-最小化安装-网络配置</a></p>
+<p>文章欢迎转载，但转载时请保留本段文字，并置于文章的顶部<br>作者：Anker Lee<br>本文原文地址：<a href="http://ankerlee.github.io/2015/05/21/Linux-时钟同步" target="_blank" rel="external">http://ankerlee.github.io/2015/05/21/Linux-时钟同步</a></p>
 </blockquote>
 <hr>
-<h2 id="相关环境">相关环境</h2><ol>
-<li>我用的是Mac book pro,系统是Mac OS X Yosemite</li>
-<li><a href="">VMware Fusion</a>（请自行安装，这里不叙述VMware Fusion的安装过程）</li>
-<li><a href="">CentOS-6.5-x86_64-minimal.iso</a>（请自行通过VMware Fusion安装，这里不叙述CentOS最小化的安装过程）</li>
-</ol>
-<h2 id="CentOS网络配置图文详解">CentOS网络配置图文详解</h2><h3 id="尝试连接网络">尝试连接网络</h3><p>例如连接内网网关，我的内网网关是192.168.16.1，<code>ping 192.168.16.1</code>,提示错误：Network is unreachable,见下图所示：<br><img src="http://7xj72a.com1.z0.glb.clouddn.com/centos_net_1.png" alt=""><br><a id="more"></a></p>
-<h3 id="查看默认网络配置情况">查看默认网络配置情况</h3><p>以上问题说明，最小化安装后，网络不可用，OK，现在，我们开始配置网络,首先查看网络配置情况（以下图示情况可能因为CentOS安装过程中是否有做网络配置而不同，我在安装过程中有做过配置，当然即使做过配置，也是不可用的，因为最小化安装后，默认不会在系统启动的后自动启动网络配置），输入命令<code>cd /etc/sysconfig/network-scripts/</code>，然后输入<code>cat ifcfg-eth0</code>查看网络配置情况：<br><img src="http://7xj72a.com1.z0.glb.clouddn.com/centos_net_2.png" alt=""><br>可以看到，我这里已经有一些默认配置了，其实是我在CentOS最小化安装过程中有做配置，这里放上我在安装过程中配置网络参数的截图(没有在CentOS安装过程中配置网络参数的，可以直接编辑ifcfg-eth0文件，根据自己的实际情况设置网络参数)：<br><img src="http://7xj72a.com1.z0.glb.clouddn.com/centos_net_3.png" alt=""><br><img src="http://7xj72a.com1.z0.glb.clouddn.com/centos_net_4.png" alt=""></p>
-<h3 id="修改网络配置">修改网络配置</h3><p>OK,这里的关键点就是ONBOOT这个参数了，表示是否在系统启动的时候自动启用网络配置，可以看到默认是no，我们要将它改为yes，输入命令：<code>vi ifcfg-eth0</code>，进入到vi编辑界面，并且修改ONBOOT值为yes（这里忽略vi编辑器的基本操作方法讲解，请自行查阅vi操作的相关资料）：<br><img src="http://7xj72a.com1.z0.glb.clouddn.com/cenos_net_5.png" alt=""></p>
-<h3 id="重启网路配置">重启网路配置</h3><p>退出vi编辑后，重启网络配置，输入命令：<code>/etc/init.d/network restart</code>或者<code>service network restart</code><br><img src="http://7xj72a.com1.z0.glb.clouddn.com/centos_net_6.png" alt=""></p>
-<h3 id="重试内网连接">重试内网连接</h3><p>OK，现在，可以再次试试ping一下内网ip，例如：<code>ping 192.168.16.1</code><br><img src="http://7xj72a.com1.z0.glb.clouddn.com/centos_net_7.png" alt=""><br>现在可以看到，已经能够成功ping通内网了，说明网络已经成功连接了哦！当然，也可以ping通外网，不过你需要通过ip来ping，而不能通过域名地址，比如<code>ping www.baidu.com</code>这是ping不通的，因为还没有配置域名服务器哦，OK，接下来，我会继续讲解如何设置域名服务器地址</p>
-<h3 id="SSH远程连接">SSH远程连接</h3><p>接下来，为了方便从网络上copy东东（比如网址）直接黏贴到CentOS的文本交互界面，我们接下来采用SSH的方式（我们不是已经配置好网络了么，所以我们现在可以通过SSH远程控制来操作CentOS了哦），通过我的物理主机（也就是我的Mac笔记本）来操作我的装载虚拟机里面的CentOS，OK，马上SSH登陆上我的CentOS，输入命令<code>ssh root@192.168.16.112</code>输入密码后，成功登陆！接下来，就让我们通过SSH来继续配置CentOS吧！！！下图为SSH登陆截图：<br><img src="http://7xj72a.com1.z0.glb.clouddn.com/centos_net_8.png" alt=""></p>
-<h3 id="修改域名服务器配置">修改域名服务器配置</h3><p>Now，输入命令：<code>vi /etc/resolv.conf</code>,请按照下图编辑（当然你也可以输入其它正确的域名地址）：<br><img src="http://7xj72a.com1.z0.glb.clouddn.com/centos_net_9.png" alt=""></p>
-<h3 id="重试外网连接">重试外网连接</h3><p>OK,保存并退出vi编辑后，再次重启网络配置，输入命令：<code>/etc/init.d/network restart</code>或者<code>service network restart</code>，然后再次实施<code>ping www.baidu.com</code>,魔法是不是产生了？可以成功ping通百度了，OK，至此，你可以自由翱翔于网络世界了，例如可以通过wget来下载东西了！！！<br><img src="http://7xj72a.com1.z0.glb.clouddn.com/centos_net_10.png" alt=""></p>
+<h2 id="时间同步配置">时间同步配置</h2><h3 id="配置时间服务器">配置时间服务器</h3><pre><code>[root<span class="property">@localhost</span> etc]<span class="comment"># date</span>
+<span class="number">2015</span>年 <span class="number">05</span>月 <span class="number">21</span>日 星期四 <span class="number">22</span>:<span class="number">04</span>:<span class="number">18</span> CST <span class="comment">#错误的时间</span>
+[root<span class="property">@localhost</span> etc]<span class="comment"># ntpdate</span>
+-<span class="attribute">bash</span>: <span class="attribute">ntpdate</span>: command <span class="keyword">not</span> found
+</code></pre><a id="more"></a>
+<pre><code>[root@localhost etc]<span class="comment"># yum install ntpdate</span>
+<span class="keyword">...</span>这里省略安装过程中的输出文本
+Complete!
+[root@localhost etc]<span class="comment"># ntpdate time.nist.gov</span>
+<span class="number">21</span> May <span class="number">14</span>:<span class="number">06</span>:<span class="number">11</span> ntpdate[<span class="number">1316</span>]: step time server <span class="number">128.138</span><span class="number">.141</span><span class="number">.172</span> offset -<span class="number">28801.756893</span> sec
+[root@localhost etc]<span class="comment"># date</span>
+<span class="number">2015</span>年 <span class="number">05</span>月 <span class="number">21</span>日 星期四 <span class="number">14</span>:<span class="number">06</span>:<span class="number">18</span> CST <span class="comment">#正确的时间</span>
+</code></pre><p>推荐几个权威的时间同步服务器：</p>
+<blockquote>
+<p>time.nist.gov<br>time.nuri.net<br>asia.pool.ntp.org<br>asia.pool.ntp.org<br>asia.pool.ntp.org<br>asia.pool.ntp.org</p>
+</blockquote>
+<h3 id="自动时间同步设置">自动时间同步设置</h3><pre><code>[root@localhost etc]<span class="comment"># service crond status</span>
+crond (pid  <span class="number">1129</span>) 正在运行<span class="keyword">...</span>
+[root@localhost etc]<span class="comment"># vim /etc/crontab</span>
+<span class="comment">#编辑crontab文件，在最后面追加*/10 * * * * ntpdate time.nist.gov，表示没10分钟同步一次时间</span>
+[root@localhost etc]<span class="comment"># cat /etc/crontab</span>
+SHELL=/bin/bash
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=root
+HOME=/
+
+For details see man <span class="number">4</span> crontabs
+
+Example of job definition:
+.---------------- minute (<span class="number">0</span> - <span class="number">59</span>)
+|  .------------- hour (<span class="number">0</span> - <span class="number">23</span>)
+|  |  .---------- day of month (<span class="number">1</span> - <span class="number">31</span>)
+|  |  |  .------- month (<span class="number">1</span> - <span class="number">12</span>) OR jan,feb,mar,apr <span class="keyword">...</span>
+|  |  |  |  .---- day of week (<span class="number">0</span> - <span class="number">6</span>) (Sunday=<span class="number">0</span> or <span class="number">7</span>) OR sun,mon,tue,wed,thu,fri,sat
+|  |  |  |  |
+*  *  *  *  * user-name command to be executed
+
+*/<span class="number">10</span> * * * * ntpdate time.nist.gov
+[root@localhost etc]<span class="comment">#</span>
+</code></pre><p>crontab文件格式和含义：<br><img src="http://7xj72a.com1.z0.glb.clouddn.com/linux_time_1.png" alt=""></p>
+<blockquote>
+<p>minute： 表示分钟，可以是从0到59之间的任何整数。<br>hour：表示小时，可以是从0到23之间的任何整数。<br>day：表示日期，可以是从1到31之间的任何整数。<br>month：表示月份，可以是从1到12之间的任何整数。<br>week：表示星期几，可以是从0到7之间的任何整数，这里的0或7代表星期日。<br>command：要执行的命令，可以是系统命令，也可以是自己编写的脚本文件。</p>
+<p>在以上各个字段中，还可以使用以下特殊字符：<br>星号（<em>）：代表所有可能的值，例如month字段如果是星号，则表示在满足其它字段的制约条件后每月都执行该命令操作。<br>逗号（,）：可以用逗号隔开的值指定一个列表范围，例如，“1,2,5,7,8,9”<br>中杠（-）：可以用整数之间的中杠表示一个整数范围，例如“2-6”表示“2,3,4,5,6”<br>正斜线（/）：可以用正斜线指定时间的间隔频率，例如“0-23/2”表示每两小时执行一次。同时正斜线可以和星号一起使用，例如</em>/10，如果用在minute字段，表示每十分钟执行一次。</p>
+</blockquote>
 
         
 
@@ -176,12 +207,12 @@
                 #linux
               </a>
             
-              <a href="/tags/最小化安装/">
-                #最小化安装
+              <a href="/tags/时钟同步/">
+                #时钟同步
               </a>
             
-              <a href="/tags/网络配置/">
-                #网络配置
+              <a href="/tags/最小化安装/">
+                #最小化安装
               </a>
             
           </div>
@@ -199,8 +230,8 @@
   
     <div class="comments" id="comments">
       
-        <div class="ds-thread" data-thread-key="2015/05/21/CentOS-6-5-最小化安装-网络配置/"
-             data-title="CentOS 6.5 最小化安装 网络配置" data-url="http://ankerlee.github.io/2015/05/21/CentOS-6-5-最小化安装-网络配置/">
+        <div class="ds-thread" data-thread-key="2015/05/21/Linux-时钟同步/"
+             data-title="Linux 时钟同步" data-url="http://ankerlee.github.io/2015/05/21/Linux-时钟同步/">
         </div>
 
       
@@ -276,7 +307,7 @@
 
     
       <div class="post-toc sidebar-panel-active">
-        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#相关环境"><span class="nav-number">1.</span> <span class="nav-text">相关环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CentOS网络配置图文详解"><span class="nav-number">2.</span> <span class="nav-text">CentOS网络配置图文详解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#尝试连接网络"><span class="nav-number">2.1.</span> <span class="nav-text">尝试连接网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看默认网络配置情况"><span class="nav-number">2.2.</span> <span class="nav-text">查看默认网络配置情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改网络配置"><span class="nav-number">2.3.</span> <span class="nav-text">修改网络配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重启网路配置"><span class="nav-number">2.4.</span> <span class="nav-text">重启网路配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重试内网连接"><span class="nav-number">2.5.</span> <span class="nav-text">重试内网连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SSH远程连接"><span class="nav-number">2.6.</span> <span class="nav-text">SSH远程连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改域名服务器配置"><span class="nav-number">2.7.</span> <span class="nav-text">修改域名服务器配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重试外网连接"><span class="nav-number">2.8.</span> <span class="nav-text">重试外网连接</span></a></li></ol></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#时间同步配置"><span class="nav-number">1.</span> <span class="nav-text">时间同步配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置时间服务器"><span class="nav-number">1.1.</span> <span class="nav-text">配置时间服务器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自动时间同步设置"><span class="nav-number">1.2.</span> <span class="nav-text">自动时间同步设置</span></a></li></ol></li></ol>
       </div>
     
   </div>
