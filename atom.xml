@@ -4,7 +4,7 @@
   <subtitle><![CDATA[Anker Lee's Blog]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://ankerlee.github.io/"/>
-  <updated>2015-05-20T14:51:30.000Z</updated>
+  <updated>2015-05-21T02:41:07.000Z</updated>
   <id>http://ankerlee.github.io/</id>
   
   <author>
@@ -16,10 +16,10 @@
   
   <entry>
     <title><![CDATA[CentOS 6.5 最小化安装 网络配置]]></title>
-    <link href="http://ankerlee.github.io/2015/05/20/CentOS-6-5-%E6%9C%80%E5%B0%8F%E5%8C%96%E5%AE%89%E8%A3%85-%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/"/>
-    <id>http://ankerlee.github.io/2015/05/20/CentOS-6-5-最小化安装-网络配置/</id>
-    <published>2015-05-20T14:51:30.000Z</published>
-    <updated>2015-05-20T14:51:30.000Z</updated>
+    <link href="http://ankerlee.github.io/2015/05/21/CentOS-6-5-%E6%9C%80%E5%B0%8F%E5%8C%96%E5%AE%89%E8%A3%85-%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/"/>
+    <id>http://ankerlee.github.io/2015/05/21/CentOS-6-5-最小化安装-网络配置/</id>
+    <published>2015-05-21T02:41:07.000Z</published>
+    <updated>2015-05-21T02:41:07.000Z</updated>
     <content type="html"><![CDATA[<h2 id="相关环境">相关环境</h2><ol>
 <li>我用的是Mac book pro,系统是Mac OS X Yosemite</li>
 <li><a href="">VMware Fusion</a>（请自行安装，这里不叙述VMware Fusion的安装过程）</li>
@@ -34,7 +34,7 @@
 <h3 id="修改域名服务器配置">修改域名服务器配置</h3><p>Now，输入命令：<code>vi /etc/resolv.conf</code>,请按照下图编辑（当然你也可以输入其它正确的域名地址）：<br><img src="http://7xj72a.com1.z0.glb.clouddn.com/centos_net_9.png" alt=""></p>
 <h3 id="重试外网连接">重试外网连接</h3><p>OK,保存并退出vi编辑后，再次重启网络配置，输入命令：<code>/etc/init.d/network restart</code>或者<code>service network restart</code>，然后再次实施<code>ping www.baidu.com</code>,魔法是不是产生了？可以成功ping通百度了，OK，至此，你可以自由翱翔于网络世界了，例如可以通过wget来下载东西了！！！<br><img src="http://7xj72a.com1.z0.glb.clouddn.com/centos_net_10.png" alt=""></p>
 <blockquote>
-<p><code>OK，最后，感谢各位耐心看完此文，希望此文对您有所帮助，转载请注明出处http://ankerlee.github.io/2015/05/20/CentOS-6-5-最小化安装-网络配置/#more</code></p>
+<p><code>OK，最后，感谢各位耐心看完此文，希望此文对您有所帮助，转载请注明出处http://ankerlee.github.io/2015/05/20/CentOS-6-5-最小化安装-网络配置</code></p>
 </blockquote>
 ]]></content>
     <summary type="html">
