@@ -37,7 +37,7 @@
   </script>
 
 
-  <title> Linux 时钟同步 // Anker Lee </title>
+  <title> Linux FTP架设 // Anker Lee </title>
 </head>
 
 <body>
@@ -108,7 +108,7 @@
           
           
             
-              Linux 时钟同步
+              Linux FTP架设
             
           
         </h1>
@@ -124,8 +124,8 @@
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/05/21/Linux-时钟同步/#comments" >
-              <span class="post-comments-count ds-thread-count" data-thread-key="2015/05/21/Linux-时钟同步/"></span>
+            <a href="/2015/05/21/Linux-FTP架设/#comments" >
+              <span class="post-comments-count ds-thread-count" data-thread-key="2015/05/21/Linux-FTP架设/"></span>
             </a>
           </span>
           
@@ -141,54 +141,45 @@
 
         
           <blockquote>
-<p>文章欢迎转载，但转载时请保留本段文字，并置于文章的顶部<br>作者：Anker Lee<br>本文原文地址：<a href="http://ankerlee.github.io/2015/05/21/Linux-时钟同步" target="_blank" rel="external">http://ankerlee.github.io/2015/05/21/Linux-时钟同步</a></p>
+<p>文章欢迎转载，但转载时请保留本段文字，并置于文章的顶部<br>作者：Anker Lee<br>本文原文地址：<a href="http://ankerlee.github.io/2015/05/21/Linux" target="_blank" rel="external">http://ankerlee.github.io/2015/05/21/Linux</a> FTP架设</p>
 </blockquote>
 <hr>
-<h2 id="时间同步配置">时间同步配置</h2><h3 id="配置时间服务器">配置时间服务器</h3><pre><code>[root<span class="property">@localhost</span> etc]<span class="comment"># date</span>
-<span class="number">2015</span>年 <span class="number">05</span>月 <span class="number">21</span>日 星期四 <span class="number">22</span>:<span class="number">04</span>:<span class="number">18</span> CST <span class="comment">#错误的时间</span>
-[root<span class="property">@localhost</span> etc]<span class="comment"># ntpdate</span>
--<span class="attribute">bash</span>: <span class="attribute">ntpdate</span>: command <span class="keyword">not</span> found
+<h2 id="FTP安装和配置">FTP安装和配置</h2><h3 id="检测和安装vsftpd">检测和安装vsftpd</h3><pre><code>[root<span class="property">@localhost</span> <span class="reserved">var</span>]<span class="comment"># vsftpd #检测是否已经安装ftp</span>
+-<span class="attribute">bash</span>: <span class="attribute">vsftpd</span>: command <span class="keyword">not</span> found
+[root<span class="property">@localhost</span> <span class="reserved">var</span>]<span class="comment"># ll /etc/vsftpd</span>
+<span class="attribute">ls</span>: 无法访问/etc/<span class="attribute">vsftpd</span>: 没有那个文件或目录
+[root<span class="property">@localhost</span> <span class="reserved">var</span>]<span class="comment"># yum install vsftpd #安装ftp</span>
 </code></pre><a id="more"></a>
-<pre><code>[root@localhost etc]<span class="comment"># yum install ntpdate</span>
-<span class="keyword">...</span>这里省略安装过程中的输出文本
-Complete!
-[root@localhost etc]<span class="comment"># ntpdate time.nist.gov</span>
-<span class="number">21</span> May <span class="number">14</span>:<span class="number">06</span>:<span class="number">11</span> ntpdate[<span class="number">1316</span>]: step time server <span class="number">128.138</span><span class="number">.141</span><span class="number">.172</span> offset -<span class="number">28801.756893</span> sec
-[root@localhost etc]<span class="comment"># date</span>
-<span class="number">2015</span>年 <span class="number">05</span>月 <span class="number">21</span>日 星期四 <span class="number">14</span>:<span class="number">06</span>:<span class="number">18</span> CST <span class="comment">#正确的时间</span>
-</code></pre><p>推荐几个权威的时间同步服务器：</p>
-<blockquote>
-<p>time.nist.gov<br>time.nuri.net<br>asia.pool.ntp.org<br>asia.pool.ntp.org<br>asia.pool.ntp.org<br>asia.pool.ntp.org</p>
-</blockquote>
-<h3 id="自动时间同步设置">自动时间同步设置</h3><pre><code>[root@localhost etc]<span class="comment"># service crond status</span>
-crond (pid  <span class="number">1129</span>) 正在运行<span class="keyword">...</span>
-[root@localhost etc]<span class="comment"># vim /etc/crontab</span>
-<span class="comment">#编辑crontab文件，在最后面追加*/10 * * * * ntpdate time.nist.gov，表示没10分钟同步一次时间</span>
-[root@localhost etc]<span class="comment"># cat /etc/crontab</span>
-SHELL=/bin/bash
-PATH=/sbin:/bin:/usr/sbin:/usr/bin
-MAILTO=root
-HOME=/
-
-For details see man <span class="number">4</span> crontabs
-
-Example of job definition:
-.---------------- minute (<span class="number">0</span> - <span class="number">59</span>)
-|  .------------- hour (<span class="number">0</span> - <span class="number">23</span>)
-|  |  .---------- day of month (<span class="number">1</span> - <span class="number">31</span>)
-|  |  |  .------- month (<span class="number">1</span> - <span class="number">12</span>) OR jan,feb,mar,apr <span class="keyword">...</span>
-|  |  |  |  .---- day of week (<span class="number">0</span> - <span class="number">6</span>) (Sunday=<span class="number">0</span> or <span class="number">7</span>) OR sun,mon,tue,wed,thu,fri,sat
-|  |  |  |  |
-*  *  *  *  * user-name command to be executed
-
-*/<span class="number">10</span> * * * * ntpdate time.nist.gov
-[root@localhost etc]<span class="comment">#</span>
-</code></pre><p>crontab文件格式和含义：<br><img src="http://7xj72a.com1.z0.glb.clouddn.com/linux_time_1.png" alt=""></p>
-<blockquote>
-<p>minute： 表示分钟，可以是从0到59之间的任何整数。<br>hour：表示小时，可以是从0到23之间的任何整数。<br>day：表示日期，可以是从1到31之间的任何整数。<br>month：表示月份，可以是从1到12之间的任何整数。<br>week：表示星期几，可以是从0到7之间的任何整数，这里的0或7代表星期日。<br>command：要执行的命令，可以是系统命令，也可以是自己编写的脚本文件。</p>
-<p>在以上各个字段中，还可以使用以下特殊字符：<br>星号（<em>）：代表所有可能的值，例如month字段如果是星号，则表示在满足其它字段的制约条件后每月都执行该命令操作。<br>逗号（,）：可以用逗号隔开的值指定一个列表范围，例如，“1,2,5,7,8,9”<br>中杠（-）：可以用整数之间的中杠表示一个整数范围，例如“2-6”表示“2,3,4,5,6”<br>正斜线（/）：可以用正斜线指定时间的间隔频率，例如“0-23/2”表示每两小时执行一次。同时正斜线可以和星号一起使用，例如</em>/10，如果用在minute字段，表示每十分钟执行一次。</p>
-</blockquote>
-
+<h3 id="默认配置下启动vsftpd">默认配置下启动vsftpd</h3><pre><code>[root<span class="variable">@localhost</span> ~]<span class="comment"># /etc/init.d/vsftpd start</span>
+为 vsftpd 启动 vsftpd：                                     [确定]
+[root<span class="variable">@localhost</span> ~]<span class="comment"># netstat -tulnp|grep 21</span>
+tcp        <span class="number">0</span>      <span class="number">0</span> <span class="number">0</span>.<span class="number">0</span>.<span class="number">0</span>.<span class="number">0</span><span class="symbol">:</span><span class="number">21</span>                  <span class="number">0</span>.<span class="number">0</span>.<span class="number">0</span>.<span class="number">0</span><span class="symbol">:*</span>                   <span class="constant">LISTEN </span>     <span class="number">1399</span>/vsftpd
+[root<span class="variable">@localhost</span> ~]<span class="comment">#</span>
+</code></pre><h3 id="临时关闭防火墙">临时关闭防火墙</h3><pre><code>[root<span class="property">@localhost</span> ~]<span class="comment"># service iptables stop</span>
+</code></pre><h3 id="本机测试ftp连接">本机测试ftp连接</h3><pre><code>[<span class="literal">root</span>@localhost ~]<span class="comment"># ftp localhost</span>
+这时候出现报错信息：-bash: ftp: <span class="literal">command</span> not found，原因是未安装ftp客户端，<span class="constant">O</span>K，我们来安装ftp客户端，为了下载ftp客户端的安装包，我们先安装下载组件
+[<span class="literal">root</span>@localhost ~]<span class="comment"># yum install wget</span>
+接着，我们下载ftp客户端安装包
+[<span class="literal">root</span>@localhost ~]<span class="comment"># wget http://mirror.centos.org/centos/6/os/x86_64/Packages/ftp-0.17-54.el6.x86_64.rpm</span>
+最后，安装ftp客户端
+[<span class="literal">root</span>@localhost ~]<span class="comment"># rpm ftp-0.17-54.el6.x86_64.rpm</span>
+再次本机测试ftp连接
+[<span class="literal">root</span>@localhost ~]<span class="comment"># ftp localhost</span>
+<span class="constant">Trying</span> ::<span class="number">1</span>...
+ftp: connect to address ::<span class="number">1</span>拒绝连接
+<span class="constant">Trying</span> <span class="number">127.0</span>.<span class="number">0</span>.<span class="number">1</span>...
+<span class="constant">Connected</span> to localhost (<span class="number">127.0</span>.<span class="number">0</span>.<span class="number">1</span>).
+<span class="number">220</span> (vsFTPd <span class="number">2.2</span>.<span class="number">2</span>)
+<span class="constant">Name</span> (localhost:<span class="literal">root</span>): anonymous        <span class="comment">#输入匿名账号</span>
+<span class="number">331</span> <span class="constant">Please</span> specify the <span class="literal">password</span>.
+<span class="constant">Password</span>:                               <span class="comment">#不需要输入密码，直接回车</span>
+<span class="number">230</span> <span class="constant">Login</span> successful.
+<span class="constant">Remote</span> <span class="literal">system</span> <span class="built_in">type</span> is <span class="constant">U</span>NIX.
+<span class="constant">Using</span> <span class="literal">binary</span> <span class="literal">mode</span> to transfer files.
+ftp&gt; 
+<span class="constant">O</span>K，本地ftp连接成功！
+</code></pre><h3 id="非本机测试ftp连接">非本机测试ftp连接</h3><p>浏览器输入: ftp://192.168.16.112，成功自动以匿名账号登陆，如下图所示：<br><img src="http://7xj72a.com1.z0.glb.clouddn.com/centos_ftp_1.png" alt=""></p>
+<h3 id="开启并配置防火墙，以允许ftp访问（待续…）">开启并配置防火墙，以允许ftp访问（待续…）</h3>
         
 
       </div>
@@ -199,16 +190,16 @@ Example of job definition:
         
           <div class="post-tags">
             
+              <a href="/tags/FTP/">
+                #FTP
+              </a>
+            
               <a href="/tags/centos/">
                 #centos
               </a>
             
               <a href="/tags/linux/">
                 #linux
-              </a>
-            
-              <a href="/tags/时钟同步/">
-                #时钟同步
               </a>
             
               <a href="/tags/最小化安装/">
@@ -230,8 +221,8 @@ Example of job definition:
   
     <div class="comments" id="comments">
       
-        <div class="ds-thread" data-thread-key="2015/05/21/Linux-时钟同步/"
-             data-title="Linux 时钟同步" data-url="http://ankerlee.github.io/2015/05/21/Linux-时钟同步/">
+        <div class="ds-thread" data-thread-key="2015/05/21/Linux-FTP架设/"
+             data-title="Linux FTP架设" data-url="http://ankerlee.github.io/2015/05/21/Linux-FTP架设/">
         </div>
 
       
@@ -307,7 +298,7 @@ Example of job definition:
 
     
       <div class="post-toc sidebar-panel-active">
-        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#时间同步配置"><span class="nav-number">1.</span> <span class="nav-text">时间同步配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置时间服务器"><span class="nav-number">1.1.</span> <span class="nav-text">配置时间服务器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自动时间同步设置"><span class="nav-number">1.2.</span> <span class="nav-text">自动时间同步设置</span></a></li></ol></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#FTP安装和配置"><span class="nav-number">1.</span> <span class="nav-text">FTP安装和配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#检测和安装vsftpd"><span class="nav-number">1.1.</span> <span class="nav-text">检测和安装vsftpd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#默认配置下启动vsftpd"><span class="nav-number">1.2.</span> <span class="nav-text">默认配置下启动vsftpd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#临时关闭防火墙"><span class="nav-number">1.3.</span> <span class="nav-text">临时关闭防火墙</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本机测试ftp连接"><span class="nav-number">1.4.</span> <span class="nav-text">本机测试ftp连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#非本机测试ftp连接"><span class="nav-number">1.5.</span> <span class="nav-text">非本机测试ftp连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开启并配置防火墙，以允许ftp访问（待续…）"><span class="nav-number">1.6.</span> <span class="nav-text">开启并配置防火墙，以允许ftp访问（待续…）</span></a></li></ol></li></ol>
       </div>
     
   </div>
